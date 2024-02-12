@@ -4,6 +4,8 @@ import MandalaLayer from './mandalaLayer';
 export default class Mandala extends PIXI.Application {
 	layers: MandalaLayer[];
 	readonly grid: PIXI.Graphics = new PIXI.Graphics();
+	gridVisible: boolean = false;
+	animationStarted: boolean = false;
 
 	/**
 	 * Create a Mandala object.
@@ -41,22 +43,30 @@ export default class Mandala extends PIXI.Application {
 	}
 
 	/**
-	 * Add grid lines to the mandala.
+	 * Toggle the visibility of the grid.
 	 */
-	addGrid() {
-		if (!this.stage.children.includes(this.grid)) {
+	toggleGrid() {
+		this.gridVisible = !this.gridVisible;
+		if (this.gridVisible) {
 			this.stage.addChild(this.grid);
-		}
-	}
-
-	/**
-	 * Remove grid lines from the mandala.
-	 */
-	removeGrid() {
-		if (this.grid) {
+		} else {
 			this.stage.removeChild(this.grid);
 		}
 	}
+	
+	/**
+	 * Toggle the animation of the mandala.
+	 */
+	toggleAnimation() {
+		this.animationStarted = !this.animationStarted;
+		if (this.animationStarted) {
+			this.layers.forEach(layer => layer.ticker.start());
+		} else {
+			this.layers.forEach(layer => layer.ticker.stop());
+		}
+	}
+	
+	
 	
 	/**
 	 * Get the layer of a specific name.
@@ -73,6 +83,9 @@ export default class Mandala extends PIXI.Application {
 	 * @returns {MandalaLayer}
 	 */
 	addLayer(name: string) {
+		if (this.getLayer(name)) {
+			throw new Error(`Layer with name ${name} already exists`);
+		}
 		const layer = new MandalaLayer(name, this);
 		this.stage.addChild(layer);
 		this.layers.push(layer);
