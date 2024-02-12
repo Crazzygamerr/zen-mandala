@@ -108,17 +108,6 @@ export default class Shape extends SmoothGraphics {
 		return this;
 	}
 
-	draw_wide_petal() {
-		super.lineStyle(2, 0x000000, 1);
-		super.moveTo(45, 0);
-		super.bezierCurveTo(60, 33, 15, 66, 0, 100);
-		super.bezierCurveTo(-15, 66, -60, 33, -45, 0);
-
-		super.rotation = -Math.PI / 2;
-		super.endFill();
-		return this;
-	}
-
 	draw_bindi(
 		height: number = 60,
 		cpx1: number = height / 4, cpy1: number = 0,
