@@ -1,10 +1,12 @@
 <script lang="ts">
-	import Mandala from '$lib/mandala';
-	import Shape from '$lib/shapes';
 	import CustomShape from '$lib/customShape';
+	import Mandala from '$lib/mandala';
+	import Shape from '$lib/shape';
 	import { SmoothGraphics as Graphics } from '@pixi/graphics-smooth';
 	import { GlowFilter } from 'pixi-filters';
 	import * as PIXI from 'pixi.js';
+	import { writable } from 'svelte/store';
+	import { ColorGradientFilter } from 'pixi-filters';
 	// // import GIF from "gif.js";
 
 	const mandalaApp = new Mandala({
@@ -12,7 +14,6 @@
 		background: '#ffffff',
 		resizeTo: window
 	});
-	mandalaApp.addGrid();
 
 	function addApp(node: HTMLElement) {
 		node.appendChild(mandalaApp.view as unknown as Node);
@@ -34,9 +35,128 @@
 		}
 	}
 
-	
+	const pos = writable([0.9, 0.9, 1.3, 1.3]);
 
-	mandalaApp.addLayer('solid_circle').circleConstructor(120, 0x000000, 155);
+	mandalaApp.addLayer('solid_circle5').circleConstructor(73, 0x000000, 310);
+
+	// add a large rectangle to mask the outer lotus
+	const rectangle = new PIXI.Graphics();
+	rectangle.beginFill(0x000000);
+	rectangle.drawRect(
+		mandalaApp.screen.width / 2 - 352,
+		mandalaApp.screen.height / 2 - 352,
+		704,
+		352
+	);
+	// mandalaApp.addLayer('rectangle_mask').addChild(rectangle);
+
+	const spiral_triangle2 = mandalaApp
+		.addLayer('spiral_triangle2')
+		.buildPattern(
+			(i) => new CustomShape().draw_spiral_triangle({ x: 0.9, y: 0.89 }),
+			15,
+			279,
+			Math.PI / 15
+		);
+	spiral_triangle2.mask = rectangle;
+	spiral_triangle2.addAnimation((delta, obj) => (obj.rotation += 0.0025 * delta));
+
+	const outer_lotus = mandalaApp
+		.addLayer('outer_lotus')
+		.buildPattern((i) => new CustomShape().draw_lotus({ x: 1.35, y: 1.35 }), 15, 276);
+	outer_lotus.mask = rectangle;
+	outer_lotus.addAnimation((delta, obj) => (obj.rotation += 0.0025 * delta));
+
+	const rectangle2 = new PIXI.Graphics();
+	rectangle2.beginFill(0x000000);
+	rectangle2.drawRect(mandalaApp.screen.width / 2 - 352, mandalaApp.screen.height / 2, 704, 352);
+
+	const spiral_triangle3 = mandalaApp
+		.addLayer('spiral_triangle3')
+		.buildPattern(
+			(i) => new CustomShape().draw_spiral_triangle({ x: 0.9, y: 0.89 }),
+			15,
+			279,
+			Math.PI / 15
+		);
+	spiral_triangle3.mask = rectangle2;
+	spiral_triangle3.addAnimation((delta, obj) => (obj.rotation -= 0.0025 * delta));
+
+	const outer_lotus2 = mandalaApp
+		.addLayer('outer_lotus2')
+		.buildPattern((i) => new CustomShape().draw_lotus({ x: 1.35, y: 1.35 }), 15, 276);
+	outer_lotus2.mask = rectangle2;
+	outer_lotus2.addAnimation((delta, obj) => (obj.rotation -= 0.0025 * delta));
+
+	function updateValue() {
+		// mandalaApp.getLayer('spiral_triangle2')?.clear();
+		// mandalaApp.getLayer('spiral_triangle2')?.buildPattern((i) => new CustomShape().draw_spiral_triangle({x: $pos[0], y:$pos[1]}), 15, 277, Math.PI / 15);
+		// mandalaApp.getLayer('outer_lotus')?.clear();
+		// mandalaApp.getLayer('outer_lotus')?.buildPattern((i) => new CustomShape().draw_lotus({ x: $pos[2], y: $pos[3] }), 15, 277);
+	}
+
+	// mandalaApp.addLayer('solid_circle3').circleConstructor(2, 0x000000, 277);
+
+	mandalaApp.addLayer('wide_petal').buildPattern(
+		(i) => {
+			const shape = new Shape();
+			shape.lineStyle(4, 0x000000);
+			shape.draw_simple_petal({
+				height: 125,
+				baseSeparation: 150,
+				cpx1: 85,
+				cpx2: 45
+			});
+			shape.scale.set(0.8, 0.8);
+			return shape;
+		},
+		15,
+		170,
+		Math.PI / 15
+	);
+	mandalaApp.getLayer('wide_petal')?.addAnimation((delta, obj) => (obj.rotation += 0.0025 * delta));
+
+	mandalaApp.addLayer('wide_petal2').buildPattern(
+		(i) => {
+			const shape = new Shape();
+			shape.lineStyle(4, 0x000000);
+			shape.draw_simple_petal({
+				height: 125,
+				baseSeparation: 150,
+				cpx1: 85,
+				cpx2: 45
+			});
+			shape.scale.set(0.8, 0.8);
+			return shape;
+		},
+		15,
+		170
+	);
+	mandalaApp
+		.getLayer('wide_petal2')
+		?.addAnimation((delta, obj) => (obj.rotation -= 0.0025 * delta));
+
+	mandalaApp.addLayer('solid_circle2').circleConstructor(90, 0x000000, 140);
+
+	const filter = new ColorGradientFilter
+	
+	const spiral_triangle1 = mandalaApp
+		.addLayer('spiral_triangle1')
+		.buildPattern(
+			(i) => new CustomShape().draw_spiral_triangle({ x: 0.4, y: 0.35 }),
+			20,
+			155,
+			Math.PI / 20
+		);
+	
+	// add a small lotus layer
+	const small_lotus = mandalaApp
+		.addLayer('small_lotus')
+		.buildPattern(
+			(i) => new CustomShape().draw_lotus({ x: 0.6, y: 0.6 }, true), 
+			20, 
+			150,
+		);
 
 	mandalaApp.addLayer('inverted_thorn').buildPattern(
 		(i) => {
@@ -85,18 +205,45 @@
 		80
 	);
 
-	mandalaApp.addLayer('inner_black_circle').circleConstructor(42.5, 0x000000, 60);
+	mandalaApp.addLayer('inner_black_circle').circleConstructor(2, 0x000000, 80);
 
-	mandalaApp.addLayer('wide_petal').buildPattern(
+	mandalaApp.addLayer('wide_petal_inner').buildPattern(
+		(i) => {
+			const container = new PIXI.Container();
+			const shape = new Shape();
+			shape.lineStyle(2, 0x000000);
+			shape.draw_simple_petal({
+				height: 100,
+				baseSeparation: 45,
+				cpx1: 70,
+				cpy1: 33,
+				cpx2: 25,
+				cpy2: 66
+			});
+			shape.scale.set(0.4, 0.4);
+			container.addChild(shape);
+
+			let maskGraphics = new PIXI.Graphics();
+			maskGraphics.beginFill(0x000000);
+			maskGraphics.drawRect(0, -25, 50, 35);
+			maskGraphics.endFill();
+			shape.mask = maskGraphics;
+			container.addChild(maskGraphics);
+
+			return container;
+		},
+		20,
+		35
+	);
+
+	mandalaApp.addLayer('small_circle').buildPattern(
 		(i) => {
 			const shape = new Shape();
-			shape.beginFill(0xffffff);
-			shape.draw_wide_petal();
-			shape.scale.set(0.4, 0.4);
+			shape.drawCircle(0, 0, 3);
 			return shape;
 		},
-		8,
-		35
+		20,
+		65
 	);
 	// add a layer of rectangles for masking the petals
 	// mandalaApp
@@ -117,22 +264,7 @@
 
 	mandalaApp.addLayer('rectangles').buildPattern((i) => new Shape().draw_rectangle(10, 20), 20, 25);
 
-	mandalaApp.addLayer('solid_circle').circleConstructor(30, 0x000000, 1);
-
-	const test = new CustomShape().draw_lotus(35);
-	test.x = 100;
-	test.y = 200;
-	mandalaApp.stage.addChild(test);
-
-	const g = new Shape().draw_simple_petal({height: 100, baseSeparation: 35});
-	g.y = 100;
-	let maskGraphics = new PIXI.Graphics();
-	maskGraphics.beginFill(0x000000);
-	maskGraphics.drawRect(0, 0, 100, 100);
-	maskGraphics.endFill();
-	mandalaApp.stage.addChild(maskGraphics);
-	// g.mask = maskGraphics;
-	mandalaApp.stage.addChild(g);
+	mandalaApp.addLayer('solid_circle1').circleConstructor(30, 0x000000, 1);
 
 	// const { CanvasCapture } = CanvasCaptureLib;
 
@@ -196,5 +328,9 @@
 	// })
 </script>
 
-<button>aa</button>
+<button on:click={() => mandalaApp.toggleGrid()}>Toggle Grid</button>
+<button on:click={() => mandalaApp.toggleAnimation()}>Toggle Animation</button>
+{#each [...Array($pos.length).keys()] as $i}
+	<input type="number" bind:value={$pos[$i]} on:input={updateValue} />
+{/each}
 <div use:addApp></div>
