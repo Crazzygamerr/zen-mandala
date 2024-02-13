@@ -3,10 +3,9 @@
 	import Mandala from '$lib/mandala';
 	import Shape from '$lib/shape';
 	import { SmoothGraphics as Graphics } from '@pixi/graphics-smooth';
-	import { GlowFilter } from 'pixi-filters';
+	import { ColorGradientFilter, GlowFilter } from 'pixi-filters';
 	import * as PIXI from 'pixi.js';
 	import { writable } from 'svelte/store';
-	import { ColorGradientFilter } from 'pixi-filters';
 	// // import GIF from "gif.js";
 
 	const mandalaApp = new Mandala({
@@ -138,8 +137,8 @@
 
 	mandalaApp.addLayer('solid_circle2').circleConstructor(90, 0x000000, 140);
 
-	const filter = new ColorGradientFilter
-	
+	const filter = new ColorGradientFilter();
+
 	const spiral_triangle1 = mandalaApp
 		.addLayer('spiral_triangle1')
 		.buildPattern(
@@ -148,15 +147,11 @@
 			155,
 			Math.PI / 20
 		);
-	
+
 	// add a small lotus layer
 	const small_lotus = mandalaApp
 		.addLayer('small_lotus')
-		.buildPattern(
-			(i) => new CustomShape().draw_lotus({ x: 0.6, y: 0.6 }, true), 
-			20, 
-			150,
-		);
+		.buildPattern((i) => new CustomShape().draw_lotus({ x: 0.6, y: 0.6 }, true), 20, 150);
 
 	mandalaApp.addLayer('inverted_thorn').buildPattern(
 		(i) => {
@@ -205,7 +200,28 @@
 		80
 	);
 
-	mandalaApp.addLayer('inner_black_circle').circleConstructor(2, 0x000000, 80);
+	mandalaApp.addLayer('inner_black_circle').circleConstructor(20, 0x000000, 70);
+
+	mandalaApp.addLayer('wide_petal_inner_fill').buildPattern(
+		(i) => {
+			const shape = new Shape();
+			shape.lineStyle(0, 0x000000);
+			shape.beginFill(0xffffff);
+			shape.draw_simple_petal({
+				height: 100,
+				baseSeparation: 45,
+				cpx1: 70,
+				cpy1: 33,
+				cpx2: 25,
+				cpy2: 66
+			});
+			shape.scale.set(0.4, 0.4);
+
+			return shape;
+		},
+		20,
+		35
+	);
 
 	mandalaApp.addLayer('wide_petal_inner').buildPattern(
 		(i) => {
@@ -245,22 +261,6 @@
 		20,
 		65
 	);
-	// add a layer of rectangles for masking the petals
-	// mandalaApp
-	// 	.addLayer('rectangle mask')
-	// 	.buildPattern(
-	// 		(i) =>{
-	// 			 const shape = new Shape();
-	// 			 shape.moveTo(-20, -20);
-	// 			 shape.lineStyle(1, 0x000000);
-	// 			 shape.beginFill(0x000000);
-	// 			 shape.drawRect(0, 0, 30, 30);
-	// 			 return shape
-	// 			},
-	// 		8, 35,
-	// 		Math.PI / 32
-	// 	);
-	// mandalaApp.layers[0].mask = mandalaApp.layers[1];
 
 	mandalaApp.addLayer('rectangles').buildPattern((i) => new Shape().draw_rectangle(10, 20), 20, 25);
 
