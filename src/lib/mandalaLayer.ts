@@ -37,9 +37,6 @@ export default class MandalaLayer extends PIXI.Container {
 			this.addChild(graphics);
 		}
 
-		this.x = this.app.screen.width / 2;
-		this.y = this.app.screen.height / 2;
-
 		return this;
 	}
 
@@ -54,8 +51,6 @@ export default class MandalaLayer extends PIXI.Container {
 		g.lineStyle(lineWidth, color);
 		g.drawCircle(0, 0, radius);
 		g.endFill();
-		g.x = this.app.screen.width / 2;
-		g.y = this.app.screen.height / 2;
 		this.addChild(g);
 	}
 
@@ -68,7 +63,7 @@ export default class MandalaLayer extends PIXI.Container {
 			tickerFunc(delta, this);
 		});
 	}
-	
+
 	toggleTicker() {
 		if (this.ticker.started) {
 			this.ticker.stop();

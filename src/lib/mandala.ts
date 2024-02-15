@@ -15,6 +15,9 @@ export default class Mandala extends PIXI.Application {
 		super(args);
 		this.layers = [];
 		this.drawGrid();
+		this.stage.x = this.screen.width / 2;
+		this.stage.y = this.screen.height / 2;
+		this.stage.scale.y = -1;
 	}
 
 	/**
@@ -22,23 +25,24 @@ export default class Mandala extends PIXI.Application {
 	 */
 	drawGrid() {
 		this.grid.lineStyle(1, 0x000000, 0.1);
-		for (let i = 0; i < this.screen.width; i += 10) {
-			this.grid.moveTo(i, 0);
+		for (let i = 0; i < this.screen.width / 2 || i < this.screen.height / 2; i += 10) {
 			if (i % 100 === 0) {
 				this.grid.lineStyle(1, 0x000000, 0.3);
 			} else {
 				this.grid.lineStyle(1, 0x000000, 0.1);
 			}
-			this.grid.lineTo(i, this.screen.height);
-		}
-		for (let i = 0; i < this.screen.height; i += 10) {
-			this.grid.moveTo(0, i);
-			if (i % 100 === 0) {
-				this.grid.lineStyle(1, 0x000000, 0.3);
-			} else {
-				this.grid.lineStyle(1, 0x000000, 0.1);
+			if (i < this.screen.width / 2) {
+				this.grid.moveTo(i, -this.screen.height / 2);
+				this.grid.lineTo(i, this.screen.height / 2);
+				this.grid.moveTo(-i, -this.screen.height / 2);
+				this.grid.lineTo(-i, this.screen.height / 2);
 			}
-			this.grid.lineTo(this.screen.width, i);
+			if (i < this.screen.height / 2) {
+				this.grid.moveTo(-this.screen.width / 2, i);
+				this.grid.lineTo(this.screen.width / 2, i);
+				this.grid.moveTo(-this.screen.width / 2, -i);
+				this.grid.lineTo(this.screen.width / 2, -i);
+			}
 		}
 	}
 
@@ -65,8 +69,6 @@ export default class Mandala extends PIXI.Application {
 			this.layers.forEach(layer => layer.ticker.stop());
 		}
 	}
-	
-	
 	
 	/**
 	 * Get the layer of a specific name.

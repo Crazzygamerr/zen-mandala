@@ -34,20 +34,15 @@
 		}
 	}
 
-	const pos = writable([0.9, 0.9, 1.3, 1.3]);
+	const pos = writable([1, 1]);
 
 	mandalaApp.addLayer('solid_circle5').circleConstructor(73, 0x000000, 310);
 
 	// add a large rectangle to mask the outer lotus
 	const rectangle = new PIXI.Graphics();
 	rectangle.beginFill(0x000000);
-	rectangle.drawRect(
-		mandalaApp.screen.width / 2 - 352,
-		mandalaApp.screen.height / 2 - 352,
-		704,
-		352
-	);
-	// mandalaApp.addLayer('rectangle_mask').addChild(rectangle);
+	rectangle.drawRect(-352, -352, 704, 352);
+	mandalaApp.addLayer('rectangle_mask').addChild(rectangle);
 
 	const spiral_triangle2 = mandalaApp
 		.addLayer('spiral_triangle2')
@@ -68,7 +63,8 @@
 
 	const rectangle2 = new PIXI.Graphics();
 	rectangle2.beginFill(0x000000);
-	rectangle2.drawRect(mandalaApp.screen.width / 2 - 352, mandalaApp.screen.height / 2, 704, 352);
+	rectangle2.drawRect(-352, 0, 704, 352);
+	mandalaApp.addLayer('rectangle_mask2').addChild(rectangle2);
 
 	const spiral_triangle3 = mandalaApp
 		.addLayer('spiral_triangle3')
@@ -92,6 +88,12 @@
 		// mandalaApp.getLayer('spiral_triangle2')?.buildPattern((i) => new CustomShape().draw_spiral_triangle({x: $pos[0], y:$pos[1]}), 15, 277, Math.PI / 15);
 		// mandalaApp.getLayer('outer_lotus')?.clear();
 		// mandalaApp.getLayer('outer_lotus')?.buildPattern((i) => new CustomShape().draw_lotus({ x: $pos[2], y: $pos[3] }), 15, 277);
+		mandalaApp.getLayer('wide_petal_inner_fill')?.children.forEach((child) => {
+			child.skew.set($pos[0], $pos[0]);
+		});
+		mandalaApp.getLayer('wide_petal_inner')?.children.forEach((child) => {
+			child.skew.set($pos[0], $pos[0]);
+		});
 	}
 
 	// mandalaApp.addLayer('solid_circle3').circleConstructor(2, 0x000000, 277);
@@ -200,10 +202,11 @@
 		80
 	);
 
-	mandalaApp.addLayer('inner_black_circle').circleConstructor(20, 0x000000, 70);
+	mandalaApp.addLayer('inner_black_circle').circleConstructor(50, 0x000000, 55);
 
 	mandalaApp.addLayer('wide_petal_inner_fill').buildPattern(
 		(i) => {
+			const container = new PIXI.Container();
 			const shape = new Shape();
 			shape.lineStyle(0, 0x000000);
 			shape.beginFill(0xffffff);
@@ -216,8 +219,9 @@
 				cpy2: 66
 			});
 			shape.scale.set(0.4, 0.4);
+			container.addChild(shape);
 
-			return shape;
+			return container;
 		},
 		20,
 		35
@@ -331,6 +335,6 @@
 <button on:click={() => mandalaApp.toggleGrid()}>Toggle Grid</button>
 <button on:click={() => mandalaApp.toggleAnimation()}>Toggle Animation</button>
 {#each [...Array($pos.length).keys()] as $i}
-	<input type="number" bind:value={$pos[$i]} on:input={updateValue} />
+	<input type="range" min="0" max="1" step="0.01" bind:value={$pos[$i]} on:input={updateValue} />
 {/each}
 <div use:addApp></div>
