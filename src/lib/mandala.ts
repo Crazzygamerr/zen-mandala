@@ -6,6 +6,8 @@ export default class Mandala extends PIXI.Application {
 	readonly grid: PIXI.Graphics = new PIXI.Graphics();
 	gridVisible: boolean = false;
 	animationStarted: boolean = false;
+	currentTime: number = 0;
+	mandalaTicker: PIXI.Ticker = new PIXI.Ticker();
 
 	/**
 	 * Create a Mandala object.
@@ -18,6 +20,11 @@ export default class Mandala extends PIXI.Application {
 		this.stage.x = this.screen.width / 2;
 		this.stage.y = this.screen.height / 2;
 		this.stage.scale.y = -1;
+
+		this.mandalaTicker.autoStart = false;
+		this.mandalaTicker.add((delta) => {
+			this.currentTime += delta;
+		})
 	}
 
 	/**
@@ -57,19 +64,19 @@ export default class Mandala extends PIXI.Application {
 			this.stage.removeChild(this.grid);
 		}
 	}
-	
+
 	/**
 	 * Toggle the animation of the mandala.
 	 */
 	toggleAnimation() {
 		this.animationStarted = !this.animationStarted;
 		if (this.animationStarted) {
-			this.layers.forEach(layer => layer.ticker.start());
+			this.mandalaTicker.start();
 		} else {
-			this.layers.forEach(layer => layer.ticker.stop());
+			this.mandalaTicker.stop();
 		}
 	}
-	
+
 	/**
 	 * Get the layer of a specific name.
 	 * @param {string} name - Name of the layer

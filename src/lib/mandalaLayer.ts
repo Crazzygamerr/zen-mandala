@@ -1,16 +1,16 @@
 import * as PIXI from 'pixi.js';
+import type Mandala from './mandala';
 
 export default class MandalaLayer extends PIXI.Container {
 	name: string;
-	app: PIXI.Application;
-	ticker: PIXI.Ticker = new PIXI.Ticker();
+	app: Mandala;
 
 	/**
 	 * Create a MandalaLayer with a circular repeating pattern.
 	 * @param {string} name - The name of the layer.
 	 * @param {PIXI.Application} app - The application to which the layer has to be added
 	 */
-	constructor(name: string, app: PIXI.Application) {
+	constructor(name: string, app: Mandala) {
 		super();
 		this.name = name;
 		this.app = app;
@@ -52,24 +52,27 @@ export default class MandalaLayer extends PIXI.Container {
 		g.drawCircle(0, 0, radius);
 		g.endFill();
 		this.addChild(g);
+
+		return this;
 	}
 
 	/**
 	 * Animate the layer.
 	 * @param {Function} tickerFunc - The function to be called on each tick.
+	 * @param {number} startTime - The time at which the animation should start.
+	 * @param {number} duration - The duration of the animation.
 	 */
-	addAnimation(tickerFunc: (delta: number, obj: MandalaLayer) => void) {
-		this.ticker.add((delta) => {
-			tickerFunc(delta, this);
+	addAnimation(
+		tickerFunc: PIXI.TickerCallback<MandalaLayer>,
+		startTime: number = 0,
+		duration: number = Infinity
+	) {
+		this.app.mandalaTicker.add((delta) => {
+			if (this.app.currentTime < startTime) return;
+			if (this.app.currentTime > startTime + duration) return;
+			tickerFunc.call(this, delta);
 		});
-	}
 
-	toggleTicker() {
-		if (this.ticker.started) {
-			this.ticker.stop();
-		} else {
-			this.ticker.start();
-		}
 	}
 
 	/**
