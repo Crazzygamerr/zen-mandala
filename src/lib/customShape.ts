@@ -1,6 +1,20 @@
 import * as PIXI from 'pixi.js';
 import Shape from './shape';
 
+// type for the options of the lotus
+interface LotusOptions {
+	small?: boolean;
+	fillColor?: PIXI.ColorSource;
+	lineColor?: PIXI.ColorSource;
+	secondaryColor?: PIXI.ColorSource;
+	scale?: PIXI.IPointData;
+}
+
+interface SpiralTriangleOptions {
+	scale?: PIXI.IPointData;
+	fillColor?: PIXI.ColorSource;
+	lineColor?: PIXI.ColorSource;
+}
 export default class CustomShape extends PIXI.Container {
 	constructor() {
 		super();
@@ -9,9 +23,20 @@ export default class CustomShape extends PIXI.Container {
 
 	/**
 	 * Draw a styllized lotus
-	 * @param {number} scale - Scale of the lotus.
+	 * @param {LotusOptions} options - Options for the lotus.
+	 * @param {boolean} [options.small=false] - Whether the lotus is small or not.
+	 * @param {PIXI.ColorSource} [options.fillColor=0xffffff] - The fill color of the lotus.
+	 * @param {PIXI.ColorSource} [options.lineColor=0xffffff] - The line color of the lotus.
+	 * @param {PIXI.ColorSource} [options.secondaryColor=0x000000] - The secondary color of the lotus.
+	 * @param {PIXI.IPointData} [options.scale={ x: 1, y: 1 }] - The scale of the lotus.
 	 */
-	draw_lotus(scale?: PIXI.IPointData, small: boolean = false) {
+	draw_lotus({
+			small = false,
+			fillColor = 0xffffff,
+			lineColor = 0xffffff,
+			secondaryColor = 0x000000,
+			scale = { x: 1, y: 1 }
+		}: LotusOptions) {
 		const petals: PIXI.DisplayObject[] = [];
 		const angles: number[] = [-Math.PI * 3 / 8, -Math.PI / 4, - Math.PI / 8, 0, Math.PI / 8, Math.PI / 4, Math.PI * 3 / 8];
 		const sizes: number[] = [17.5, 15, 17.5, 30, 17.5, 15, 17.5];
@@ -21,7 +46,8 @@ export default class CustomShape extends PIXI.Container {
 		for (let i = 0; i < angles.length; i++) {
 			if (small && (i == 0 || i == 6)) continue;
 			const petal = new Shape();
-			petal.beginFill(0xffffff);
+			petal.lineStyle(1, lineColor);
+			petal.beginFill(fillColor);
 			petal.draw_simple_petal({ height: sizes[i], baseSeparation: 0, cpx1: cpx1s[i], cpx2: cpx2s[i] })
 			petal.x = 16 * Math.cos(angles[i]);
 			petal.y = 16 * Math.sin(angles[i]);
@@ -41,20 +67,20 @@ export default class CustomShape extends PIXI.Container {
 		const endAngle = small ? Math.PI / 3 : Math.PI / 2;
 		
 		const center3 = new Shape();
-		center3.lineStyle(1, 0xffffff);
-		center3.beginFill(0xffffff);
+		center3.lineStyle(1, lineColor);
+		center3.beginFill(fillColor);
 		center3.arc(0, 0, 15, startAngle, endAngle);
 		this.addChild(center3);
 
 		const center2 = new Shape();
-		center2.lineStyle(1, 0x000000);
-		center2.beginFill(0x000000);
+		center2.lineStyle(1, secondaryColor);
+		center2.beginFill(secondaryColor);
 		center2.arc(0, 0, 12, startAngle, endAngle);
 		this.addChild(center2);
 
 		const center1 = new Shape();
-		center1.lineStyle(1, 0xffffff);
-		center1.beginFill(0xffffff);
+		center1.lineStyle(1, lineColor);
+		center1.beginFill(fillColor);
 		center1.moveTo(0, 0);
 		center1.lineTo(10 * Math.cos(startAngle), 10 * Math.sin(startAngle));
 		center1.arc(0, 0, 10, startAngle, endAngle);
@@ -69,15 +95,19 @@ export default class CustomShape extends PIXI.Container {
 	 * Draw a triangle with a spiral inside
 	 * @param {number} scale - Scale of the triangle.
 	 */
-	draw_spiral_triangle(scale?: PIXI.IPointData) {
+	draw_spiral_triangle({
+		scale = { x: 1, y: 1 },
+		fillColor = 0xffffff,
+		lineColor = 0x000000
+	}: SpiralTriangleOptions) {
 		const innerRadius = 327, outerRadius = 405;
 		const number = 15;
 		const length = Math.sqrt(outerRadius * outerRadius + innerRadius * innerRadius - 2 * outerRadius * innerRadius * Math.cos(Math.PI / number));
 		const angle = Math.asin(Math.sin(Math.PI / number) * innerRadius / length) + Math.PI / number;
 
 		const triangle = new Shape();
-		triangle.lineStyle(1, 0x000000);
-		triangle.beginFill(0xffffff);
+		triangle.lineStyle(1, lineColor);
+		triangle.beginFill(fillColor);
 		triangle.moveTo(0, 0);
 		triangle.lineTo(length * Math.cos(angle), length * Math.sin(angle));
 		triangle.moveTo(0, 0);
@@ -89,8 +119,8 @@ export default class CustomShape extends PIXI.Container {
 			centroidY = (length * Math.sin(angle) + length * Math.sin(-angle)) / 3;
 
 		const spiral1bg = new PIXI.Graphics();
-		spiral1bg.lineStyle(3, 0x000000);
-		spiral1bg.beginFill(0xffffff);
+		spiral1bg.lineStyle(3, lineColor);
+		spiral1bg.beginFill(fillColor);
 		spiral1bg.moveTo(centroidX - 5, centroidY - 5);
 		spiral1bg.quadraticCurveTo(centroidX + 30, centroidY - 20, length * Math.cos(angle), length * Math.sin(angle));
 		spiral1bg.lineTo(0, 0);
@@ -98,8 +128,8 @@ export default class CustomShape extends PIXI.Container {
 		this.addChild(spiral1bg);
 
 		const spiral2bg = new PIXI.Graphics();
-		spiral2bg.lineStyle(3, 0x000000);
-		spiral2bg.beginFill(0xffffff);
+		spiral2bg.lineStyle(3, lineColor);
+		spiral2bg.beginFill(fillColor);
 		spiral2bg.moveTo(centroidX - 5, centroidY + 5);
 		spiral2bg.quadraticCurveTo(centroidX - 30, centroidY - 20, length * Math.cos(-angle), length * Math.sin(-angle));
 		spiral2bg.lineTo(0, 0);
@@ -108,8 +138,8 @@ export default class CustomShape extends PIXI.Container {
 		this.addChild(spiral2bg);
 
 		const spiral3Mask = new PIXI.Graphics();
-		spiral3Mask.lineStyle(3, 0x000000);
-		spiral3Mask.beginFill(0xffffff);
+		spiral3Mask.lineStyle(3, lineColor);
+		spiral3Mask.beginFill(fillColor);
 		spiral3Mask.moveTo(centroidX - 5, centroidY + 5);
 		spiral3Mask.quadraticCurveTo(centroidX - 30, centroidY - 20, length * Math.cos(-angle), length * Math.sin(-angle));
 		spiral3Mask.arc(-327, 0, 405, -Math.PI / 15, Math.PI / 15);
@@ -119,7 +149,7 @@ export default class CustomShape extends PIXI.Container {
 
 
 		const center = new Shape();
-		center.lineStyle(8, 0x000000);
+		center.lineStyle(8, lineColor);
 		center.drawCircle(centroidX, centroidY, 4);
 		center.endFill();
 		this.addChild(center);
@@ -136,7 +166,7 @@ export default class CustomShape extends PIXI.Container {
 		this.addChild(innerCurve1);
 
 		const spiral1 = new PIXI.Graphics();
-		spiral1.lineStyle(3, 0x000000);
+		spiral1.lineStyle(3, lineColor);
 		spiral1.moveTo(centroidX - 5, centroidY - 5);
 		spiral1.quadraticCurveTo(centroidX + 30, centroidY - 20, length * Math.cos(angle), length * Math.sin(angle));
 		spiral1.endFill();
@@ -151,7 +181,7 @@ export default class CustomShape extends PIXI.Container {
 		this.addChild(innerCurve2);
 
 		const spiral2 = new Shape();
-		spiral2.lineStyle(3, 0x000000);
+		spiral2.lineStyle(3, lineColor);
 		spiral2.moveTo(centroidX - 5, centroidY + 5);
 		spiral2.quadraticCurveTo(centroidX - 30, centroidY - 20, length * Math.cos(-angle), length * Math.sin(-angle));
 		spiral2.endFill();
@@ -170,7 +200,7 @@ export default class CustomShape extends PIXI.Container {
 
 
 		const spiral3 = new Shape();
-		spiral3.lineStyle(3, 0x000000);
+		spiral3.lineStyle(3, lineColor);
 		spiral3.moveTo(centroidX + 5, centroidY + 5);
 		spiral3.quadraticCurveTo(centroidX - 30, centroidY + 20, 0, 0);
 		spiral3.endFill();
