@@ -1,5 +1,7 @@
 import * as PIXI from 'pixi.js';
 import type Mandala from './mandala';
+import { globalTime } from '../store/timeStore';
+import { get } from 'svelte/store';
 
 export default class MandalaLayer extends PIXI.Container {
 	name: string;
@@ -43,10 +45,10 @@ export default class MandalaLayer extends PIXI.Container {
 	/**
 	 * Add a solid circle to the layer. A convenience method instead of drawing a circle using the graphics object.
 	 * @param {number} lineWidth - The width of the line.
-	 * @param {number} color - The color of the line.
+	 * @param {PIXI.ColorSource} color - The color of the line.
 	 * @param {number} radius - The radius of the circle.
 	 */
-	circleConstructor(lineWidth: number, color: number, radius: number) {
+	circleConstructor(lineWidth: number, color: PIXI.ColorSource, radius: number) {
 		const g = new PIXI.Graphics();
 		g.lineStyle(lineWidth, color);
 		g.drawCircle(0, 0, radius);
@@ -68,8 +70,9 @@ export default class MandalaLayer extends PIXI.Container {
 		duration: number = Infinity
 	) {
 		this.app.mandalaTicker.add((delta) => {
-			if (this.app.currentTime < startTime) return;
-			if (this.app.currentTime > startTime + duration) return;
+			const currentTime = get(globalTime);
+			if (currentTime < startTime) return;
+			if (currentTime > startTime + duration) return;
 			tickerFunc.call(this, delta);
 		});
 

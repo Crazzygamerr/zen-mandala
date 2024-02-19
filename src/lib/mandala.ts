@@ -1,12 +1,12 @@
 import * as PIXI from 'pixi.js';
 import MandalaLayer from './mandalaLayer';
+import { globalTime } from '../store/timeStore';
 
 export default class Mandala extends PIXI.Application {
 	layers: MandalaLayer[];
 	readonly grid: PIXI.Graphics = new PIXI.Graphics();
 	gridVisible: boolean = false;
 	animationStarted: boolean = false;
-	currentTime: number = 0;
 	mandalaTicker: PIXI.Ticker = new PIXI.Ticker();
 
 	/**
@@ -23,7 +23,7 @@ export default class Mandala extends PIXI.Application {
 
 		this.mandalaTicker.autoStart = false;
 		this.mandalaTicker.add((delta) => {
-			this.currentTime += delta;
+			globalTime.update(time => time + delta);
 		})
 	}
 
