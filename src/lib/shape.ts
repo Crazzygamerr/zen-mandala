@@ -1,4 +1,4 @@
-// import * as PIXI from 'pixi.js';
+import * as PIXI from 'pixi.js';
 import { SmoothGraphics, DashLineShader } from '@pixi/graphics-smooth';
 
 type SimplePetalParams = {
@@ -13,9 +13,14 @@ type SimplePetalParams = {
 // export default class Shape extends PIXI.Graphics {
 // Make this class extend both PIXI.Graphics and PIXI.SmoothGraphics
 export default class Shape extends SmoothGraphics {
-	constructor() {
+	lineColor: PIXI.ColorSource;
+	fillColor: PIXI.ColorSource;
+	
+	constructor(lineColor: PIXI.ColorSource = 0x000000, fillColor: PIXI.ColorSource = 0xffffff) {
 		super();
-		super.lineStyle(1, 0x000000, 1);
+		super.lineStyle(1, lineColor, 1);
+		this.lineColor = lineColor;
+		this.fillColor = fillColor;
 	}
 
 	/**
@@ -32,13 +37,13 @@ export default class Shape extends SmoothGraphics {
 	}
 
 	draw_arc_variant() {
-		super.lineStyle(2, 0x000000, 1);
+		super.lineStyle(2, this.lineColor, 1);
 		super.arc(6, 0, 32.5, (2 / 5) * Math.PI, (-2 / 5) * Math.PI, true);
 		super.moveTo(10, 22.5);
 		super.arc(3.5, 0, 25, (2 / 5) * Math.PI, (-2 / 5) * Math.PI, true);
 		super.lineStyle({
 			width: 2,
-			color: 0x000000,
+			color: this.lineColor,
 			shader: new DashLineShader({ dash: 2, gap: 3 })
 		});
 		super.moveTo(20, 27.5);
@@ -48,7 +53,7 @@ export default class Shape extends SmoothGraphics {
 	}
 
 	draw_leaf_variant() {
-		super.lineStyle(2, 0x000000, 1);
+		super.lineStyle(2, this.lineColor, 1);
 		super.moveTo(45, 0);
 		super.bezierCurveTo(60, 33, 15, 66, 0, 100);
 		super.bezierCurveTo(-15, 66, -60, 33, -45, 0);
@@ -57,7 +62,7 @@ export default class Shape extends SmoothGraphics {
 		super.bezierCurveTo(-15, 76, -60, 43, -47.5, 10);
 		super.lineStyle({
 			width: 3,
-			color: 0x000000,
+			color: this.lineColor,
 			shader: new DashLineShader({ dash: 3, gap: 6 })
 		});
 		super.moveTo(30, 20);
@@ -69,14 +74,14 @@ export default class Shape extends SmoothGraphics {
 	}
 
 	draw_leaf() {
-		super.lineStyle(2, 0x000000, 1);
+		super.lineStyle(2, this.lineColor, 1);
 		super.moveTo(0, 0);
 		super.quadraticCurveTo(54, -50, 0, -95);
 		super.quadraticCurveTo(-54, -50, 0, 0);
 		super.moveTo(0, 10);
 		super.quadraticCurveTo(54, -50, 0, -105);
 		super.quadraticCurveTo(-54, -50, 0, 10);
-		super.beginFill(0x000000);
+		super.beginFill(this.fillColor);
 		super.drawEllipse(0, -72, 4, 8);
 		super.rotation = Math.PI / 2;
 		super.endFill();
@@ -115,7 +120,7 @@ export default class Shape extends SmoothGraphics {
 	) {
 		const cp3 = [cpx1, cpy1, cpx2, cpy2];
 		const cp4 = [-cpx2, cpy2, -cpx1, cpy1];
-		super.beginFill(0x000000);
+		super.beginFill(this.fillColor);
 		super.moveTo(0, 0);
 		super.bezierCurveTo(cp3[0], cp3[1], cp3[2], cp3[3], 0, height);
 		super.bezierCurveTo(cp4[0], cp4[1], cp4[2], cp4[3], 0, 0);
@@ -147,8 +152,7 @@ export default class Shape extends SmoothGraphics {
 	 * @param {number} height - Height of the rectangle.
 	 */
 	draw_rectangle(width: number, height: number) {
-		super.lineStyle(1, 0x000000, 1);
-		super.beginFill(0xffffff);
+		super.beginFill(this.fillColor);
 		super.drawRect(-width / 2, -height / 2, width, height);
 		super.rotation = -Math.PI / 2;
 		super.endFill();
@@ -165,7 +169,6 @@ export default class Shape extends SmoothGraphics {
 		cpx: number = 0, cpy: number = height * 3 / 4,
 		curvature: number = 0
 	) {
-		super.lineStyle(1, 0x000000, 1);
 		super.moveTo(0, 0);
 		super.quadraticCurveTo(cpx, cpy, width / 2, height);
 		super.quadraticCurveTo(0, height * 5 / 4 + curvature, -width / 2, height);
