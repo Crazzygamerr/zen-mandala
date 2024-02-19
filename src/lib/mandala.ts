@@ -23,8 +23,9 @@ export default class Mandala extends PIXI.Application {
 
 		this.mandalaTicker.autoStart = false;
 		this.mandalaTicker.add((delta) => {
-			globalTime.update(time => time + delta);
+			if (this.animationStarted) globalTime.update(time => time + delta);
 		})
+		this.mandalaTicker.update();
 	}
 
 	/**
@@ -98,6 +99,7 @@ export default class Mandala extends PIXI.Application {
 		const layer = new MandalaLayer(name, this);
 		this.stage.addChild(layer);
 		this.layers.push(layer);
+		this.mandalaTicker.update();
 		return layer;
 	}
 

@@ -155,6 +155,7 @@ export default class CustomShape extends PIXI.Container {
 		this.addChild(center);
 
 		const innerCurve1 = new Shape();
+		innerCurve1.lineStyle(1, lineColor);
 		innerCurve1.moveTo(16, 20);
 		innerCurve1.quadraticCurveTo(51, 31, 64, 6);
 		innerCurve1.moveTo(26, 33);
@@ -173,6 +174,7 @@ export default class CustomShape extends PIXI.Container {
 		this.addChild(spiral1);
 
 		const innerCurve2 = new Shape();
+		innerCurve2.lineStyle(1, lineColor);
 		innerCurve2.moveTo(-12, 21);
 		innerCurve2.quadraticCurveTo(7, 5, 21, 17);
 		innerCurve2.moveTo(-12, 32);
@@ -188,6 +190,7 @@ export default class CustomShape extends PIXI.Container {
 		this.addChild(spiral2);
 
 		const innerCurve3 = new Shape();
+		innerCurve3.lineStyle(1, lineColor);
 		innerCurve3.moveTo(76, -25);
 		innerCurve3.quadraticCurveTo(55, -46, 36, -28);
 		innerCurve3.moveTo(33, -12);
