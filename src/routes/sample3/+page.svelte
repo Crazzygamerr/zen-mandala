@@ -5,6 +5,10 @@
 	import Mandala from '$lib/mandala';
 	// // import GIF from "gif.js";
 
+	const outsideColor = 0xff0063,
+		middleColor = 0xfff700,
+		insideColor = 0xabdbe3;
+	
 	const app = new PIXI.Application({
 		antialias: true,
 		background: '#000000',
@@ -51,9 +55,10 @@
 			g1.x = x;
 			g1.y = y;
 			g1.rotation += theta;
+			// container.addChild(new PIXI.Sprite(app.renderer.generateTexture(g1)));
 			container.addChild(g1);
 		}
-
+		
 		app.stage.addChild(container);
 		container.x = app.screen.width / 2;
 		container.y = app.screen.height / 2;
@@ -67,7 +72,7 @@
 	
 	function draw_arrowhead() {
 		let g3 = new PIXI.Graphics();
-		g3.lineStyle(1, 0xaf3dff, 1);
+		g3.lineStyle(1, outsideColor, 1);
 		g3.moveTo(0, 0);
 		g3.lineTo(10, 5);
 		g3.lineTo(0, 10);
@@ -77,7 +82,7 @@
 
 	function draw_circle() {
 		let g1 = new PIXI.Graphics();
-		g1.lineStyle(2, 0xaf3dff, 1);
+		g1.lineStyle(2, outsideColor, 1);
 		g1.drawCircle(0, 0, 10);
 		g1.endFill();
 		return g1;
@@ -85,7 +90,7 @@
 
 	function draw_semicircle() {
 		let g2 = new PIXI.Graphics();
-		g2.lineStyle(2, 0xaf3dff, 1);
+		g2.lineStyle(2, outsideColor, 1);
 		g2.arc(0, 0, 4, Math.PI / 2, -Math.PI / 2, true);
 		g2.endFill();
 		return g2;
@@ -93,13 +98,13 @@
 
 	function draw_arc_variant() {
 		let g = new Graphics();
-		g.lineStyle(2, 0xaf3dff, 1);
+		g.lineStyle(2, middleColor, 1);
 		g.arc(6, 0, 32.5, (2 / 5) * Math.PI, (-2 / 5) * Math.PI, true);
 		g.moveTo(10, 22.5);
 		g.arc(3.5, 0, 25, (2 / 5) * Math.PI, (-2 / 5) * Math.PI, true);
 		g.lineStyle({
 			width: 2,
-			color: 0xaf3dff,
+			color: middleColor,
 			shader: new DashLineShader({ dash: 2, gap: 3 }),
 		});
 		g.moveTo(20, 27.5);
@@ -110,7 +115,7 @@
 
 	function draw_leaf_variant() {
 		let g = new Graphics();
-		g.lineStyle(2, 0xaf3dff, 1);
+		g.lineStyle(2, middleColor, 1);
 		g.moveTo(45, 0);
 		g.bezierCurveTo(60, 33, 15, 66, 0, 100);
 		g.bezierCurveTo(-15, 66, -60, 33, -45, 0);
@@ -119,7 +124,7 @@
 		g.bezierCurveTo(-15, 76, -60, 43, -47.5, 10);
 		g.lineStyle({
 			width: 3,
-			color: 0xaf3dff,
+			color: middleColor,
 			shader: new DashLineShader({ dash: 3, gap: 6 }),
 		});
 		g.moveTo(30, 20);
@@ -133,14 +138,14 @@
 
 	function draw_leaf() {
 		let g = new PIXI.Graphics();
-		g.lineStyle(2, 0xaf3dff, 1);
+		g.lineStyle(2, middleColor, 1);
 		g.moveTo(0, 0);
 		g.quadraticCurveTo(54, -50, 0, -95);
 		g.quadraticCurveTo(-54, -50, 0, 0);
 		g.moveTo(0, 10);
 		g.quadraticCurveTo(54, -50, 0, -105);
 		g.quadraticCurveTo(-54, -50, 0, 10);
-		g.beginFill(0xaf3dff);
+		g.beginFill(middleColor);
 		g.drawEllipse(0, -72, 4, 8);
 		g.rotation = Math.PI / 2;
 		g.scale.set(0.5, 0.5);
@@ -150,7 +155,7 @@
 
 	function draw_rectangle() {
 		let g = new PIXI.Graphics();
-		g.lineStyle(1, 0xaf3dff, 1);
+		g.lineStyle(1, insideColor, 1);
 		g.drawRect(0, 0, 10, 5);
 		g.endFill();
 		return g;
@@ -158,7 +163,7 @@
 
 	function draw_pill() {
 		let g = new PIXI.Graphics();
-		g.lineStyle(1, 0xaf3dff, 1);
+		g.lineStyle(1, middleColor, 1);
 		g.lineTo(6, 0);
 		g.arc(7, -3.5, 3, Math.PI / 2, -Math.PI / 2, true);
 		g.lineTo(0, -7);
@@ -168,7 +173,7 @@
 
 	function draw_simple_petal() {
 		let g = new Graphics();
-		g.lineStyle(4, 0xaf3dff, 1);
+		g.lineStyle(4, insideColor, 1);
 
 		let [x1, y1, x2, y2, x3, y3, x4, y4] = [40, 33, 25, 66, -25, 66, -40, 33];
 		g.moveTo(35, 0);
@@ -177,7 +182,7 @@
 
 		let cp3 = [17.5, 20, 10, 45];
 		let cp4 = [-10, 45, -17.5, 20];
-		g.beginFill(0xaf3dff);
+		g.beginFill(insideColor);
 		g.moveTo(0, 10);
 		g.bezierCurveTo(cp3[0], cp3[1], cp3[2], cp3[3], 0, 60);
 		g.bezierCurveTo(cp4[0], cp4[1], cp4[2], cp4[3], 0, 10);
@@ -191,11 +196,11 @@
 
 	function draw_bindi() {
 		let g = new Graphics();
-		g.lineStyle(2, 0xaf3dff, 1);
+		g.lineStyle(2, insideColor, 1);
 
 		let cp3 = [17.5, 20, 10, 45];
 		let cp4 = [-10, 45, -17.5, 20];
-		g.beginFill(0xaf3dff);
+		g.beginFill(insideColor);
 		g.moveTo(0, 10);
 		g.bezierCurveTo(cp3[0], cp3[1], cp3[2], cp3[3], 0, 60);
 		g.bezierCurveTo(cp4[0], cp4[1], cp4[2], cp4[3], 0, 10);
@@ -208,7 +213,7 @@
 
 	function draw_rotated_petal() {
 		let g = new Graphics();
-		g.lineStyle(4, 0xaf3dff, 1);
+		g.lineStyle(4, insideColor, 1);
 		let [x1, y1, x2, y2, x3, y3, x4, y4] = [40, 33, 25, 66, -25, 66, -40, 33];
 		g.moveTo(35, 0);
 		g.bezierCurveTo(x1, y1, x2, y2, 0, 100);
@@ -220,7 +225,7 @@
 
 	function draw_curve() {
 		let g = new Graphics();
-		g.lineStyle(2, 0xaf3dff, 1);
+		g.lineStyle(2, insideColor, 1);
 		let [x1, y1, x2, y2] = [20, 25, 5, 60];
 		g.moveTo(0, 0);
 		g.bezierCurveTo(x1, y1, x2, y2, -25, 65);
@@ -230,12 +235,12 @@
 	}
 
 	layerConstructor(draw_arrowhead, 72, 219, 0.0025);
-	circleConstructor(5, 0xaf3dff, 215);
-	circleConstructor(2, 0xaf3dff, 205);
+	circleConstructor(5, outsideColor, 215);
+	circleConstructor(2, outsideColor, 205);
 
 	layerConstructor(draw_circle, 40, 190, 0.0025);
 	layerConstructor(draw_semicircle, 72, 170, 0.0025);
-	circleConstructor(2, 0xaf3dff, 170);
+	circleConstructor(2, outsideColor, 170);
 	circleConstructor(10, 0x000000, 163.5);
 
 	layerConstructor(draw_arc_variant, 10, 120, -0.0025, -Math.PI / 2);
@@ -244,15 +249,16 @@
 
 	circleConstructor(30, 0x000000, 70);
 	layerConstructor(draw_pill, 43, 75, -0.0025);
-	circleConstructor(2, 0xaf3dff, 75);
-	layerConstructor(draw_rectangle, 72, 60, -0.0025);
+	
+	circleConstructor(2, middleColor, 75);
+	layerConstructor(draw_rectangle, 72, 60, 0.0025);
 
 	layerConstructor(draw_curve, 8, 45, -0.0025, Math.PI / 8);
-	layerConstructor(draw_bindi, 8, 35, -0.0025, Math.PI / 8);
-	layerConstructor(draw_simple_petal, 8, 22.5, -0.0025);
-	circleConstructor(1, 0xaf3dff, 22.5);
-	layerConstructor(draw_rotated_petal, 8, 5, -0.0025);
-	circleConstructor(2, 0xaf3dff, 1);
+	layerConstructor(draw_bindi, 8, 35, 0.0025, Math.PI / 8);
+	layerConstructor(draw_simple_petal, 8, 22.5, 0.0025);
+	circleConstructor(1, insideColor, 22.5);
+	layerConstructor(draw_rotated_petal, 8, 5, 0.0025);
+	circleConstructor(2, insideColor, 1);
 	
 	// const { CanvasCapture } = CanvasCaptureLib;
 
