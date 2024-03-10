@@ -66,19 +66,19 @@ export default class CustomShape extends PIXI.Container {
 		const startAngle = small ? -Math.PI / 3 : -Math.PI / 2;
 		const endAngle = small ? Math.PI / 3 : Math.PI / 2;
 		
-		const center3 = new Shape();
+		const center3 = new PIXI.Graphics();
 		center3.lineStyle(1, lineColor);
 		center3.beginFill(fillColor);
 		center3.arc(0, 0, 15, startAngle, endAngle);
 		this.addChild(center3);
 
-		const center2 = new Shape();
+		const center2 = new PIXI.Graphics();
 		center2.lineStyle(1, secondaryColor);
 		center2.beginFill(secondaryColor);
 		center2.arc(0, 0, 12, startAngle, endAngle);
 		this.addChild(center2);
 
-		const center1 = new Shape();
+		const center1 = new PIXI.Graphics();
 		center1.lineStyle(1, lineColor);
 		center1.beginFill(fillColor);
 		center1.moveTo(0, 0);
@@ -105,7 +105,7 @@ export default class CustomShape extends PIXI.Container {
 		const length = Math.sqrt(outerRadius * outerRadius + innerRadius * innerRadius - 2 * outerRadius * innerRadius * Math.cos(Math.PI / number));
 		const angle = Math.asin(Math.sin(Math.PI / number) * innerRadius / length) + Math.PI / number;
 
-		const triangle = new Shape();
+		const triangle = new PIXI.Graphics();
 		triangle.lineStyle(1, lineColor);
 		triangle.beginFill(fillColor);
 		triangle.moveTo(0, 0);
@@ -148,13 +148,13 @@ export default class CustomShape extends PIXI.Container {
 		this.addChild(spiral3Mask);
 
 
-		const center = new Shape();
+		const center = new PIXI.Graphics();
 		center.lineStyle(8, lineColor);
 		center.drawCircle(centroidX, centroidY, 4);
 		center.endFill();
 		this.addChild(center);
 
-		const innerCurve1 = new Shape();
+		const innerCurve1 = new PIXI.Graphics();
 		innerCurve1.lineStyle(1, lineColor);
 		innerCurve1.moveTo(16, 20);
 		innerCurve1.quadraticCurveTo(51, 31, 64, 6);
@@ -173,7 +173,7 @@ export default class CustomShape extends PIXI.Container {
 		spiral1.endFill();
 		this.addChild(spiral1);
 
-		const innerCurve2 = new Shape();
+		const innerCurve2 = new PIXI.Graphics();
 		innerCurve2.lineStyle(1, lineColor);
 		innerCurve2.moveTo(-12, 21);
 		innerCurve2.quadraticCurveTo(7, 5, 21, 17);
@@ -182,14 +182,14 @@ export default class CustomShape extends PIXI.Container {
 		innerCurve2.rotation = - Math.PI / 2;
 		this.addChild(innerCurve2);
 
-		const spiral2 = new Shape();
+		const spiral2 = new PIXI.Graphics();
 		spiral2.lineStyle(3, lineColor);
 		spiral2.moveTo(centroidX - 5, centroidY + 5);
 		spiral2.quadraticCurveTo(centroidX - 30, centroidY - 20, length * Math.cos(-angle), length * Math.sin(-angle));
 		spiral2.endFill();
 		this.addChild(spiral2);
 
-		const innerCurve3 = new Shape();
+		const innerCurve3 = new PIXI.Graphics();
 		innerCurve3.lineStyle(1, lineColor);
 		innerCurve3.moveTo(76, -25);
 		innerCurve3.quadraticCurveTo(55, -46, 36, -28);
@@ -202,7 +202,7 @@ export default class CustomShape extends PIXI.Container {
 		this.addChild(innerCurve3);
 
 
-		const spiral3 = new Shape();
+		const spiral3 = new PIXI.Graphics();
 		spiral3.lineStyle(3, lineColor);
 		spiral3.moveTo(centroidX + 5, centroidY + 5);
 		spiral3.quadraticCurveTo(centroidX - 30, centroidY + 20, 0, 0);

@@ -1,18 +1,28 @@
-# create-svelte
+# Zen-mandala
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+An editor for creating mandalas.
 
-## Creating a project
+## Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+- Using PIXI.js for rendering
+- Mandala, MandalaLayer, and Shape abstraction
+- Preset shapes and custom shapes
+- Animation
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+## Roadmap
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+- [ ] Mandala generation from state JSON
+- [ ] Remove the app reference from MandalaLayer
+- [ ] Layer highlight on hover
+- [ ] Shape builder
+- [ ] Editor UI
+- [ ] Animation timeline
+- [ ] Animation class
+- [ ] Performance optimization, using Sprites
+- [ ] Exporting Images
+- [ ] Recording and exporting animations
+- [ ] Infinite looping GIFs
+- [ ] Landing Page
 
 ## Developing
 

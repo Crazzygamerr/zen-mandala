@@ -2,10 +2,10 @@
 	import CustomShape from '$lib/customShape';
 	import Mandala from '$lib/mandala';
 	import MandalaLayer from '$lib/mandalaLayer';
+	import type { CircleParams } from '$lib/shape';
 	import Shape from '$lib/shape';
 	import { GlowFilter } from 'pixi-filters';
 	import * as PIXI from 'pixi.js';
-	import { writable } from 'svelte/store';
 	import { globalTime } from '../../store/timeStore';
 	// // import GIF from "gif.js";
 
@@ -30,7 +30,14 @@
 		color: 0xffffff
 	});
 
-	const animatedMask = mandalaApp.addLayer('solid_circle_anim').circleConstructor(10, 0x000000, 5);
+	const animatedMask = mandalaApp.addLayer('solid_circle_anim');
+	animatedMask.addChild(
+		Shape.fromJSON({
+			type: 'shape',
+			shapeType: 'circle',
+			params: { lineWidth: 10, radius: 5 } as CircleParams
+		})
+	);
 	animatedMask.addAnimation(
 		function (this: MandalaLayer, delta: number) {
 			this.scale.set($globalTime / 25, $globalTime / 25);
@@ -39,7 +46,15 @@
 		800
 	);
 
-	mandalaApp.addLayer('solid_circle5').circleConstructor(73, middleColor, 310);
+	const solid_circle5 = mandalaApp.addLayer('solid_circle5');
+	solid_circle5.addChild(
+		Shape.fromJSON({
+			type: 'shape',
+			shapeType: 'circle',
+			lineColor: middleColor,
+			params: { lineWidth: 73, radius: 310 } as CircleParams
+		})
+	);
 
 	const lowerRectangleMask = mandalaApp.addLayer('rectangle_mask');
 	lowerRectangleMask.addChild(
@@ -126,8 +141,6 @@
 		}.bind(outer_lotus2)
 	);
 
-	// mandalaApp.addLayer('solid_circle3').circleConstructor(2, 0x000000, 277);
-
 	const wide_petal = mandalaApp.addLayer('wide_petal').buildPattern(
 		(i) => {
 			const shape = new Shape();
@@ -175,7 +188,16 @@
 		}.bind(wide_petal2)
 	);
 
-	mandalaApp.addLayer('solid_circle2').circleConstructor(90, insideColor, 140).mask = animatedMask;
+	const solid_circle2 = mandalaApp.addLayer('solid_circle2');
+	solid_circle2.addChild(
+		Shape.fromJSON({
+			type: 'shape',
+			shapeType: 'circle',
+			lineColor: insideColor,
+			params: { lineWidth: 90, radius: 140 } as CircleParams
+		})
+	);
+	solid_circle2.mask = animatedMask;
 
 	const spiral_triangle1 = mandalaApp.addLayer('spiral_triangle1');
 	spiral_triangle1.buildPattern(
@@ -226,7 +248,7 @@
 			const shape = new Shape();
 			shape.lineStyle(2, middleColor);
 			shape.beginFill(backgroundColor);
-			shape.draw_inverted_thorn(40, 40, 0, 15, 10);
+			shape.draw_inverted_thorn({ height: 40, width: 40, cpx: 0, cpy: 15, curvature: 10 });
 			return shape;
 		},
 		20,
@@ -248,7 +270,7 @@
 			const shape = new Shape();
 			shape.lineStyle(1, middleColor);
 			shape.beginFill(insideColor);
-			shape.draw_inverted_thorn(25, 25, 2.5, 15, 5);
+			shape.draw_inverted_thorn({ height: 25, width: 25, cpx: 0, cpy: 15, curvature: 5 });
 			return shape;
 		},
 		20,
@@ -288,7 +310,7 @@
 		(i) => {
 			const shape = new Shape(insideColor);
 			shape.beginFill(backgroundColor);
-			shape.draw_half_pill(13, 8, 5);
+			shape.draw_half_pill({ height: 13, width: 8, curvature: 5 });
 			shape.scale.set(1.5, 1.5);
 			return shape;
 		},
@@ -296,7 +318,16 @@
 		80
 	).mask = animatedMask;
 
-	mandalaApp.addLayer('inner_circle').circleConstructor(50, insideColor, 55).mask = animatedMask;
+	const inner_circle = mandalaApp.addLayer('inner_circle');
+	inner_circle.addChild(
+		Shape.fromJSON({
+			type: 'shape',
+			shapeType: 'circle',
+			lineColor: insideColor,
+			params: { lineWidth: 50, radius: 55 } as CircleParams
+		})
+	);
+	inner_circle.mask = animatedMask;
 
 	const wide_petal_inner_fill = mandalaApp.addLayer('wide_petal_inner_fill');
 	wide_petal_inner_fill.buildPattern(
@@ -365,13 +396,21 @@
 
 	const rectangles = mandalaApp.addLayer('rectangles');
 	rectangles.buildPattern(
-		(i) => new Shape(backgroundColor, insideColor).draw_rectangle(10, 17),
+		(i) => new Shape(backgroundColor, insideColor).draw_rectangle({ width: 10, height: 17 }),
 		24,
 		25
 	);
 	rectangles.mask = animatedMask;
 
-	mandalaApp.addLayer('solid_circle1').circleConstructor(30, insideColor, 1);
+	const solid_circle1 = mandalaApp.addLayer('solid_circle1');
+	solid_circle1.addChild(
+		Shape.fromJSON({
+			type: 'shape',
+			shapeType: 'circle',
+			lineColor: insideColor,
+			params: { lineWidth: 30, radius: 1 } as CircleParams
+		})
+	);
 </script>
 
 <button on:click={() => mandalaApp.toggleGrid()}>Toggle Grid</button>
@@ -397,5 +436,13 @@
 			mandalaApp.mandalaTicker.update();
 		}}
 	/>
+</div>
+<!-- buttons for selecting layers -->
+<div>
+	{#each mandalaApp.layers as layer}
+		<button on:click={() => mandalaApp.highlightLayer(layer.name)}>{layer.name}</button>
+	{/each}
+	<!-- clear highlight -->
+	<button on:click={() => mandalaApp.unhighlightLayer()}>Clear Highlight</button>
 </div>
 <div use:addApp></div>

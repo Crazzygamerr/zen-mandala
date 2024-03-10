@@ -1,6 +1,14 @@
 import * as PIXI from 'pixi.js';
 import MandalaLayer from './mandalaLayer';
+import type { MandalaLayerJSON } from './mandalaLayer';
 import { globalTime } from '../store/timeStore';
+
+// type description for the json object
+export type MandalaJSON = {
+	type: 'mandala';
+	appOptions: Partial<PIXI.IApplicationOptions>;
+	layers: MandalaLayerJSON[];
+};
 
 export default class Mandala extends PIXI.Application {
 	layers: MandalaLayer[];
@@ -92,7 +100,7 @@ export default class Mandala extends PIXI.Application {
 	 * @param {string} name - Name of the layer
 	 * @returns {MandalaLayer}
 	 */
-	addLayer(name: string) {
+	addLayer(name: string): MandalaLayer {
 		if (this.getLayer(name)) {
 			throw new Error(`Layer with name ${name} already exists`);
 		}
@@ -131,14 +139,53 @@ export default class Mandala extends PIXI.Application {
 		this.stage.removeChildren();
 		this.layers = [];
 	}
+	
+	/**
+	 * Highlight a layer
+	 * @param {string} name - Name of the layer
+	 */
+	highlightLayer(name: string) {
+		this.layers.forEach(layer => {
+			if (layer.name === name) {
+				layer.alpha = 1;
+			} else {
+				layer.alpha = 0.5;
+			}
+		});
+	}
+	
+	/**
+	 * Unhighlight all layers
+	 */
+	unhighlightLayer() {
+		this.layers.forEach(layer => {
+			layer.alpha = 1;
+		});
+	}
 
 	/**
 	 * Convert the mandala to a JSON object.
 	 * @returns {Object} JSON representation of the mandala.
 	 */
-	toJSON() {
-		return {
-			layers: this.layers.map(layer => layer.toJSON())
-		};
+	// toJSON() {
+	// 	return {
+	// 		layers: this.layers.map(layer => layer.toJSON())
+	// 	};
+	// }
+	
+	/**
+	 * Create a Mandala object from a JSON object.
+	 * @param {MandalaJSON} json - JSON representation of the mandala.
+	 */
+	static fromJSON(json: MandalaJSON) {
+		const mandala = new Mandala(json.appOptions);
+		
+		json.layers.forEach(layerJSON => {
+			const layer = MandalaLayer.fromJSON(layerJSON, mandala);
+			mandala.stage.addChild(layer);
+			mandala.layers.push(layer);
+		});
+		
+		return mandala;
 	}
 }

@@ -1,11 +1,35 @@
 import * as PIXI from 'pixi.js';
-import type Mandala from './mandala';
-import { globalTime } from '../store/timeStore';
 import { get } from 'svelte/store';
+import { globalTime } from '../store/timeStore';
+import type Mandala from './mandala';
+import type { ShapeJSON } from './shape';
+import type { ContainerJSON, GraphicsJSON } from './utils';
+import { objectFromJSON } from './utils';
+
+export type MandalaLayerType = 'pattern' | 'container' | 'none';
+
+export type MandalaLayerPattern = {
+	itemGenerator: GraphicsJSON | ContainerJSON | ShapeJSON;
+	itemCount: number;
+	radius: number;
+	offset?: number;
+};
+
+// create type description for the json object
+export type MandalaLayerJSON = {
+	name: string;
+	type: 'mandalaLayer';
+	layerType: MandalaLayerType;
+	pattern?: MandalaLayerPattern;
+	children?: (GraphicsJSON | ContainerJSON | ShapeJSON)[];
+};
 
 export default class MandalaLayer extends PIXI.Container {
 	name: string;
 	app: Mandala;
+	// layerType: MandalaLayerType = 'none';
+	// pattern?: MandalaLayerPattern;
+	// container?: PIXI.Container;
 
 	/**
 	 * Create a MandalaLayer with a circular repeating pattern.
@@ -26,6 +50,10 @@ export default class MandalaLayer extends PIXI.Container {
 	 * @param {number} [offset=0] Angle(radians) that the circle is rotated anti-clockwise.
 	 */
 	buildPattern(itemGenerator: (i: number) => PIXI.DisplayObject, itemCount: number, radius: number, offset: number = 0) {
+		this.removeChildren();
+		// this.layerType = 'pattern';
+		// this.pattern = { itemGenerator: itemGenerator(0).toJSON(), itemCount, radius, offset };
+
 		for (let i = 0; i < itemCount; i++) {
 			const graphics = itemGenerator(i);
 
@@ -38,22 +66,6 @@ export default class MandalaLayer extends PIXI.Container {
 			graphics.rotation += theta;
 			this.addChild(graphics);
 		}
-
-		return this;
-	}
-
-	/**
-	 * Add a solid circle to the layer. A convenience method instead of drawing a circle using the graphics object.
-	 * @param {number} lineWidth - The width of the line.
-	 * @param {PIXI.ColorSource} color - The color of the line.
-	 * @param {number} radius - The radius of the circle.
-	 */
-	circleConstructor(lineWidth: number, color: PIXI.ColorSource, radius: number) {
-		const g = new PIXI.Graphics();
-		g.lineStyle(lineWidth, color);
-		g.drawCircle(0, 0, radius);
-		g.endFill();
-		this.addChild(g);
 
 		return this;
 	}
@@ -79,38 +91,35 @@ export default class MandalaLayer extends PIXI.Container {
 	}
 
 	/**
-	 * Clear all shapes from the layer.
-	 */
-	clear() {
-		this.removeChildren();
-	}
-
-	/**
 	 * Convert the layer to a JSON object.
-	 * @returns {Object} JSON representation of the layer.
+	 * @returns {MandalaLayerJSON} JSON representation of the layer.
 	 */
-	toJSON() {
-		return {
-			name: this.name,
-			pattern: {
-
-			}
-		};
-	}
+	// toJSON() {
+	// }
 
 	/**
 	 * Create a layer from a JSON object.
-	 * @param {Object} json - JSON representation of the layer.
-	 * @returns {MandalaLayer} The created layer.
+	 * @param {MandalaLayerJSON} json - JSON representation of the layer.
+	 * @returns {MandalaLayer} The layer created from the JSON object.
 	 */
-	// static fromJSON(json) {
-	// const layer = new MandalaLayer(json.name);
-	// Create shapes from JSON and add them to the layer
-	// json.shapes.forEach(shapeData => {
-	// 	const shape = new PIXI.Graphics();
-	// 	// Deserialize shape properties and draw shape
-	// 	layer.addShape(shape);
-	// });
-	// return layer;
-	// }
+	static fromJSON(json: MandalaLayerJSON, app: Mandala) {
+		const layer = new MandalaLayer(json.name, app);
+
+		if (json.layerType === 'pattern' && json.pattern) {
+			layer.buildPattern(
+				() => objectFromJSON(json.pattern!.itemGenerator),
+				json.pattern.itemCount,
+				json.pattern.radius,
+				json.pattern.offset
+			);
+		}
+
+		if (json.layerType === 'container' && json.children) {
+			for (const child of json.children) {
+				layer.addChild(objectFromJSON(child));
+			}
+		}
+		
+		return layer;
+	}
 }
