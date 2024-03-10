@@ -11,7 +11,7 @@ An editor for creating mandalas.
 
 ## Roadmap
 
-- [ ] Mandala generation from state JSON
+- [-] Mandala generation from state JSON
 - [ ] Remove the app reference from MandalaLayer
 - [ ] Layer highlight on hover
 - [ ] Shape builder

@@ -4,9 +4,8 @@ import type { MandalaLayerJSON } from './mandalaLayer';
 import { globalTime } from '../store/timeStore';
 
 // type description for the json object
-export type MandalaJSON = {
+export type MandalaJSON = Partial<PIXI.IApplicationOptions> & {
 	type: 'mandala';
-	appOptions: Partial<PIXI.IApplicationOptions>;
 	layers: MandalaLayerJSON[];
 };
 
@@ -100,14 +99,24 @@ export default class Mandala extends PIXI.Application {
 	 * @param {string} name - Name of the layer
 	 * @returns {MandalaLayer}
 	 */
-	addLayer(name: string): MandalaLayer {
-		if (this.getLayer(name)) {
+	addLayer(layer: MandalaLayer) {
+		if (this.layers.includes(layer) || this.getLayer(layer.name)) {
 			throw new Error(`Layer with name ${name} already exists`);
 		}
-		const layer = new MandalaLayer(name, this);
 		this.stage.addChild(layer);
 		this.layers.push(layer);
 		this.mandalaTicker.update();
+		return this;
+	}
+	
+	/**
+	 * Add a layer from a JSON object.
+	 * @param {MandalaLayerJSON} json - JSON representation of the layer
+	 * @returns {MandalaLayer}
+	 */
+	addLayerFromJSON(json: MandalaLayerJSON) {
+		const layer = MandalaLayer.fromJSON(json, this);
+		this.addLayer(layer);
 		return layer;
 	}
 
@@ -178,7 +187,7 @@ export default class Mandala extends PIXI.Application {
 	 * @param {MandalaJSON} json - JSON representation of the mandala.
 	 */
 	static fromJSON(json: MandalaJSON) {
-		const mandala = new Mandala(json.appOptions);
+		const mandala = new Mandala(json);
 		
 		json.layers.forEach(layerJSON => {
 			const layer = MandalaLayer.fromJSON(layerJSON, mandala);

@@ -13,10 +13,8 @@
 	// create a writable store for the mandalaState of type MandalaJSON
 	const mandalaJSON = writable<MandalaJSON>({
 		type: 'mandala',
-		appOptions: {
-			antialias: true,
-			background: backgroundColor
-		},
+		antialias: true,
+		background: backgroundColor,
 		layers: [
 			{
 				type: 'mandalaLayer',
