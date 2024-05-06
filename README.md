@@ -1,6 +1,8 @@
 # Zen-mandala
 
-An editor for creating mandalas.
+I created this project due to my fascination with animated mandalas. The YouTube channel called [Armonian](https://www.youtube.com/@Armonian) makes some amazing ones and the first mandala is their design. 
+
+The goals of this project will keep evolving as progress is made in the implementation side. Right now it is to create a backend and format that is flexible enough to handle all the features and animations.
 
 ## Features
 
@@ -15,7 +17,7 @@ An editor for creating mandalas.
 - [ ] Layer highlight on hover
 - [ ] Use types from PIXI.js (graphics)
 - [ ] Remove the app reference from MandalaLayer
-- [ ] Shape builder
+- [ ] Shape builder (Create once, use many)
 - [ ] Editor UI
 - [ ] Animation timeline
 - [ ] Animation class
