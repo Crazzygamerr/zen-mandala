@@ -10,7 +10,7 @@ export type ArrowheadParams = {
 export type HalfPillParams = {
 	height: number,
 	width: number,
-	curvature: number,
+	curvature?: number,
 };
 
 export type SimplePetalParams = {
@@ -48,8 +48,13 @@ export type CircleParams = {
 	radius: number,
 };
 
-export type shapeType = 'arrowhead' | 'arc_variant' | 'leaf_variant' | 'leaf' | 'half_pill' | 'simple_petal' | 'bindi' | 'inverted_thorn' | 'rectangle' | 'circle' | 'none';
-export type shapeParams = ArrowheadParams | HalfPillParams | BindiParams | InvertedThornParams | RectangleParams | SimplePetalParams | CircleParams;
+export type TriangleParams = {
+	base: number,
+	height: number,
+};
+
+export type shapeType = 'arrowhead' | 'arc_variant' | 'leaf_variant' | 'leaf' | 'half_pill' | 'simple_petal' | 'bindi' | 'inverted_thorn' | 'rectangle' | 'circle' | 'triangle' | 'none';
+export type shapeParams = ArrowheadParams | HalfPillParams | BindiParams | InvertedThornParams | RectangleParams | SimplePetalParams | CircleParams | TriangleParams;
 
 export type ShapeJSON = {
 	type: 'shape';
@@ -146,7 +151,7 @@ export default class Shape extends SmoothGraphics {
 		super.endFill();
 	}
 
-	draw_half_pill({ height, width, curvature }: HalfPillParams) {
+	draw_half_pill({ height, width, curvature = 0 }: HalfPillParams) {
 		this.shapeType = 'half_pill';
 		this.params = { height, width, curvature };
 		if (this.fillColor) super.beginFill(this.fillColor);
@@ -230,6 +235,25 @@ export default class Shape extends SmoothGraphics {
 		return this;
 	}
 
+	/**
+	 * Draw a triangle.
+	 * @param {number} base - Base of the triangle.
+	 * @param {number} height - Height of the triangle.
+	 */
+	draw_triangle({ base, height }: TriangleParams) {
+		this.shapeType = 'triangle';
+		this.params = { base, height };
+		if (this.fillColor) super.beginFill(this.fillColor);
+
+		super.moveTo(-base / 2, -height / 2);
+		super.lineTo(base / 2, -height / 2);
+		super.lineTo(0, height / 2);
+		super.lineTo(-base / 2, -height / 2);
+		super.rotation = -Math.PI / 2;
+		super.endFill();
+		return this;
+	}
+	
 	/**
 	 * Draw an inverted thorn.
 	 * @param {number} width - Width of the thorn.

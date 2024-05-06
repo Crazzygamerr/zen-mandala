@@ -108,7 +108,7 @@ export default class Mandala extends PIXI.Application {
 		this.mandalaTicker.update();
 		return this;
 	}
-	
+
 	/**
 	 * Add a layer from a JSON object.
 	 * @param {MandalaLayerJSON} json - JSON representation of the layer
@@ -148,7 +148,7 @@ export default class Mandala extends PIXI.Application {
 		this.stage.removeChildren();
 		this.layers = [];
 	}
-	
+
 	/**
 	 * Highlight a layer
 	 * @param {string} name - Name of the layer
@@ -162,7 +162,7 @@ export default class Mandala extends PIXI.Application {
 			}
 		});
 	}
-	
+
 	/**
 	 * Unhighlight all layers
 	 */
@@ -181,20 +181,32 @@ export default class Mandala extends PIXI.Application {
 	// 		layers: this.layers.map(layer => layer.toJSON())
 	// 	};
 	// }
-	
+
 	/**
 	 * Create a Mandala object from a JSON object.
 	 * @param {MandalaJSON} json - JSON representation of the mandala.
 	 */
 	static fromJSON(json: MandalaJSON) {
 		const mandala = new Mandala(json);
-		
+
 		json.layers.forEach(layerJSON => {
 			const layer = MandalaLayer.fromJSON(layerJSON, mandala);
 			mandala.stage.addChild(layer);
 			mandala.layers.push(layer);
 		});
-		
+
 		return mandala;
+	}
+
+	// load layers from json
+	loadLayers(json: MandalaJSON) {
+		this.layers = [];
+		this.clear();
+
+		json.layers.forEach(layerJSON => {
+			const layer = MandalaLayer.fromJSON(layerJSON, this);
+			this.stage.addChild(layer);
+			this.layers.push(layer);
+		});
 	}
 }

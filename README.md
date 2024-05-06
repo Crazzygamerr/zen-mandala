@@ -11,9 +11,10 @@ An editor for creating mandalas.
 
 ## Roadmap
 
-- [-] Mandala generation from state JSON
-- [ ] Remove the app reference from MandalaLayer
+- [x] Mandala generation from state JSON (Mandala layer add)
 - [ ] Layer highlight on hover
+- [ ] Use types from PIXI.js (graphics)
+- [ ] Remove the app reference from MandalaLayer
 - [ ] Shape builder
 - [ ] Editor UI
 - [ ] Animation timeline

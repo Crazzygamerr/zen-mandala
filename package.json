@@ -37,6 +37,7 @@
 		"@pixi/graphics-smooth": "^1.1.0",
 		"@pixi/math-extras": "^7.4.0",
 		"pixi-filters": "^5.2.1",
-		"pixi.js": "^7.4.0"
+		"pixi.js": "^7.4.0",
+		"svelte-jsoneditor": "^0.22.0"
 	}
 }
