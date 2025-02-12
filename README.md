@@ -11,22 +11,6 @@ The goals of this project will keep evolving as progress is made in the implemen
 - Preset shapes and custom shapes
 - Animation
 
-## Roadmap
-
-- [x] Mandala generation from state JSON (Mandala layer add)
-- [ ] Layer highlight on hover
-- [ ] Use types from PIXI.js (graphics)
-- [ ] Remove the app reference from MandalaLayer
-- [ ] Shape builder (Create once, use many)
-- [ ] Editor UI
-- [ ] Animation timeline
-- [ ] Animation class
-- [ ] Performance optimization, using Sprites
-- [ ] Exporting Images
-- [ ] Recording and exporting animations
-- [ ] Infinite looping GIFs
-- [ ] Landing Page
-
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:

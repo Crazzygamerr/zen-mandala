@@ -33,6 +33,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@google/generative-ai": "^0.21.0",
 		"@pixi/graphics-extras": "^7.4.0",
 		"@pixi/graphics-smooth": "^1.1.0",
 		"@pixi/math-extras": "^7.4.0",
