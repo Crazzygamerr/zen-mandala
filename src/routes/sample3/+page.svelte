@@ -260,6 +260,17 @@
 	layerConstructor(draw_rotated_petal, 8, 5, 0.0025);
 	circleConstructor(2, insideColor, 1);
 	
+	// Set a square aspect ratio and resize
+	let ratio;
+	if (window.innerWidth > window.innerHeight) {
+		ratio = window.innerHeight / 750;  
+		app.stage.scale.set(ratio, ratio)
+	} else {
+		ratio = window.innerWidth / 750;
+		app.stage.scale.set(ratio, ratio);
+	}
+	app.stage.x = window.innerWidth * (1 - ratio) / 2;
+	app.stage.y = window.innerHeight * (1 - ratio) / 2;
 	// const { CanvasCapture } = CanvasCaptureLib;
 
 	// // Initialize and pass in canvas.

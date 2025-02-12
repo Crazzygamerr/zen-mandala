@@ -8,7 +8,7 @@
 	const app = new PIXI.Application({
 		antialias: true,
 		background: '#000000',
-		resizeTo: window
+		resizeTo: window,
 	});
 
 	function addApp(node: HTMLElement) {
@@ -254,6 +254,19 @@
 	layerConstructor(draw_rotated_petal, 8, 5, -0.0025);
 	circleConstructor(2, 0xaf3dff, 1);
 	
+	// Set a square aspect ratio and resize
+	let ratio;
+	if (window.innerWidth > window.innerHeight) {
+		ratio = window.innerHeight / 750;  
+		app.stage.scale.set(ratio, ratio)
+	} else {
+		ratio = window.innerWidth / 750;
+		app.stage.scale.set(ratio, ratio);
+	}
+	app.stage.x = window.innerWidth * (1 - ratio) / 2;
+	app.stage.y = window.innerHeight * (1 - ratio) / 2;
+	
+	
 	// const { CanvasCapture } = CanvasCaptureLib;
 
 	// // Initialize and pass in canvas.
@@ -320,8 +333,6 @@
 
 <style lang="scss">
 	:global(body) {
-		margin: 0;
-		padding: 0;
-		overflow: hidden;
+	  background-color: #000000;
 	}
 </style>

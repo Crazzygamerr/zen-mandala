@@ -473,9 +473,20 @@
 			}
 		]
 	});
+	
+	// Set a square aspect ratio and resize
+	let ratio;
+	if (window.innerWidth > window.innerHeight) {
+		ratio = window.innerHeight / 750;  
+		mandalaApp.stage.scale.set(ratio, ratio)
+	} else {
+		ratio = window.innerWidth / 750;
+		mandalaApp.stage.scale.set(ratio, ratio);
+	}
+	
 </script>
 
-<button on:click={() => mandalaApp.toggleGrid()}>Toggle Grid</button>
+<!-- <button on:click={() => mandalaApp.toggleGrid()}>Toggle Grid</button> -->
 <button on:click={() => mandalaApp.toggleAnimation()}>Toggle Animation</button>
 <!-- input for mandalaTimer -->
 <div>
@@ -499,12 +510,10 @@
 		}}
 	/>
 </div>
-<!-- buttons for selecting layers -->
-<div>
+<!-- <div>
 	{#each mandalaApp.layers as layer}
 		<button on:click={() => mandalaApp.highlightLayer(layer.name)}>{layer.name}</button>
 	{/each}
-	<!-- clear highlight -->
 	<button on:click={() => mandalaApp.unhighlightLayer()}>Clear Highlight</button>
-</div>
+</div> -->
 <div use:addApp></div>
