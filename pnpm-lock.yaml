@@ -20,6 +20,9 @@ dependencies:
   pixi-filters:
     specifier: ^5.2.1
     version: 5.2.1(@pixi/core@7.4.0)(@pixi/filter-alpha@7.4.0)(@pixi/filter-blur@7.4.0)
+  pixi-viewport:
+    specifier: ^5.0.2
+    version: 5.0.2
   pixi.js:
     specifier: ^7.4.0
     version: 7.4.0
@@ -2585,6 +2588,10 @@ packages:
       - '@pixi/core'
       - '@pixi/filter-alpha'
       - '@pixi/filter-blur'
+    dev: false
+
+  /pixi-viewport@5.0.2:
+    resolution: {integrity: sha512-U77KnCTl81xEgxEQRFEuI7MYVySWwCVkA41EnM8KiOYwgVOwdBUa7318O+u61IOnTwnoYLzaihy/kpoONKU13Q==}
     dev: false
 
   /pixi.js@7.4.0:

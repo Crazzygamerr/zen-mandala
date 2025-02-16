@@ -7,6 +7,7 @@
 	import { GlowFilter } from 'pixi-filters';
 	import * as PIXI from 'pixi.js';
 	import { globalTime } from '../../store/timeStore';
+	import { Viewport } from "pixi-viewport";
 	// // import GIF from "gif.js";
 
 	let backgroundColor = '80BCBD',

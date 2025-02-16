@@ -3,6 +3,7 @@
 	import { GlowFilter } from 'pixi-filters';
 	import { SmoothGraphics as Graphics, DashLineShader } from '@pixi/graphics-smooth';
 	import Mandala from '$lib/mandala';
+	import { Viewport } from "pixi-viewport";
 	// // import GIF from "gif.js";
 
 	const app = new PIXI.Application({
@@ -10,6 +11,16 @@
 		background: '#000000',
 		resizeTo: window,
 	});
+	
+	const viewport = new Viewport({
+		screenWidth: window.innerWidth,
+		screenHeight: window.innerHeight,
+		events: app.renderer.events, // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
+	});
+	
+	viewport.drag().pinch().wheel().decelerate();
+
+	app.stage.addChild(viewport);
 
 	function addApp(node: HTMLElement) {
 		node.appendChild(app.view as unknown as Node);
@@ -34,7 +45,7 @@
 		container.x = app.screen.width / 2;
 		container.y = app.screen.height / 2;
 		container.scale.set(1.5, 1.5);
-		app.stage.addChild(container);
+		viewport.addChild(container);
 	}
 
 	// Construct a layer of repeating pattern
@@ -54,7 +65,7 @@
 			container.addChild(g1);
 		}
 
-		app.stage.addChild(container);
+		viewport.addChild(container);
 		container.x = app.screen.width / 2;
 		container.y = app.screen.height / 2;
 		app.ticker.add((delta) => {
@@ -333,6 +344,10 @@
 
 <style lang="scss">
 	:global(body) {
+		overflow: hidden;
 	  background-color: #000000;
+	}
+	div {
+		overflow: hidden;
 	}
 </style>
